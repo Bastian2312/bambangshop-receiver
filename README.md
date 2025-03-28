@@ -59,14 +59,14 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   Open another new terminal, edit `ROCKET_PORT` in `.env` to `8003`, then execute `cargo run`.
 
 ## Mandatory Checklists (Subscriber)
--   [ ] Clone https://gitlab.com/ichlaffterlalu/bambangshop-receiver to a new repository.
+-   [v] Clone https://gitlab.com/ichlaffterlalu/bambangshop-receiver to a new repository.
 -   **STAGE 1: Implement models and repositories**
-    -   [ ] Commit: `Create Notification model struct.`
-    -   [ ] Commit: `Create SubscriberRequest model struct.`
-    -   [ ] Commit: `Create Notification database and Notification repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Notification repository.`
-    -   [ ] Commit: `Implement list_all_as_string function in Notification repository.`
-    -   [ ] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
+    -   [v] Commit: `Create Notification model struct.`
+    -   [v] Commit: `Create SubscriberRequest model struct.`
+    -   [v] Commit: `Create Notification database and Notification repository struct skeleton.`
+    -   [v] Commit: `Implement add function in Notification repository.`
+    -   [v] Commit: `Implement list_all_as_string function in Notification repository.`
+    -   [v] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
 -   **STAGE 3: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
     -   [ ] Commit: `Implement subscribe function in Notification service.`
@@ -85,5 +85,9 @@ This is the place for you to write reflections:
 ### Mandatory (Subscriber) Reflections
 
 #### Reflection Subscriber-1
+
+1. Penggunaan RwLock<> dalam kasus ini penting karena kita ingin mengizinkan multiple reader secara bersamaan saat hanya membaca data, tetapi tetap memastikan akses eksklusif saat ada writer yang ingin memodifikasi ```Vec<Notification>```. Jika kita menggunakan Mutex<> sebagai gantinya, hanya satu thread yang dapat mengakses data dalam satu waktu, baik untuk membaca maupun menulis, yang dapat menyebabkan bottleneck dalam sistem dengan banyak pembacaan. RwLock<> memungkinkan kita untuk meningkatkan efisiensi dengan membiarkan beberapa thread membaca data secara bersamaan tanpa harus saling menunggu, kecuali jika ada thread yang sedang melakukan operasi tulis.
+
+2. Rust tidak mengizinkan kita untuk langsung memodifikasi konten dari variabel static seperti di Java karena Rust mengutamakan memory safety dan thread safety tanpa harus bergantung pada garbage collector. Jika static mutable diperbolehkan secara langsung, kita akan menghadapi race condition karena beberapa thread bisa mengakses dan mengubahnya secara bersamaan tanpa mekanisme sinkronisasi yang aman. Oleh karena itu, kita menggunakan library lazy_static bersama RwLock<> atau DashMap untuk memastikan akses yang aman terhadap shared state. Rust mewajibkan kita untuk secara eksplisit menyatakan kapan kita ingin membaca atau menulis ke dalam data yang dibagikan, sehingga memastikan bahwa akses terhadap data bersifat terkontrol dan aman dari race conditions yang sering terjadi dalam bahasa lain seperti Java.
 
 #### Reflection Subscriber-2
